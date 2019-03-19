@@ -13,10 +13,20 @@ class App extends React.Component {
 	};
 
 	componentDidMount() {
+		const { params } = this.props.match;
+		const localStorageRef = localStorage.getItem(params.storeID);
+		if (localStorageRef) {
+			this.setState({ order: JSON.parse(localStorageRef) });
+		}
+
 		this.ref = base.syncState(`${this.props.match.params.storeID}/fishes`, {
 			context: this,
 			state: 'fishes',
 		});
+	}
+
+	componentDidUpdate() {
+		localStorage.setItem(this.props.match.params.storeID, JSON.stringify(this.state.order));
 	}
 
 	componentWillUnmount() {
