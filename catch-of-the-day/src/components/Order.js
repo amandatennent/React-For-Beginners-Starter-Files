@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/accessible-emoji */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import { formatPrice } from '../helpers';
@@ -18,6 +19,7 @@ class Order extends React.Component {
 			<li key={key}>
 				{count} lbs {fish.name}
 				{formatPrice(count * fish.price)}
+				<button type="button" onClick={() => this.props.removeFromOrder(key)}>&times;</button>
 			</li>
 		);
 	}
