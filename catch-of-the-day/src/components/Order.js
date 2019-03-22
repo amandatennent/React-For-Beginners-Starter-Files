@@ -1,6 +1,5 @@
-/* eslint-disable jsx-a11y/accessible-emoji */
-/* eslint-disable react/prefer-stateless-function */
 import React from 'react';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { formatPrice } from '../helpers';
 
 class Order extends React.Component {
@@ -8,21 +7,41 @@ class Order extends React.Component {
 		const fish = this.props.fishes[key];
 		const count = this.props.order[key];
 		const isAvailable = fish && fish.status === 'available';
+		const transitionOptions = {
+			classNames: 'order',
+			key,
+			timeout: { enter: 500, exit: 500 },
+		};
 
 		if (!fish) return null; // Make sure fish objects are loaded before we display the order
 
 		if (!isAvailable) {
-			return <li key={key}>Sorry {fish ? fish.name : 'fish'} is no longer available</li>;
+			return (
+				<CSSTransition {...transitionOptions}>
+					<li key={key}>Sorry {fish ? fish.name : 'fish'} is no longer available</li>
+				</CSSTransition>
+			);
 		}
 
 		return (
-			<li key={key}>
-				{count} lbs {fish.name}
-				{formatPrice(count * fish.price)}
-				<button type="button" onClick={() => this.props.removeFromOrder(key)}>&times;</button>
-			</li>
+			<CSSTransition {...transitionOptions}>
+				<li key={key}>
+					<span>
+						<TransitionGroup component="span" className="count">
+							<CSSTransition classNames="count" key={count} timeout={{ enter: 500, exit: 500 }}>
+								<span>{count}</span>
+							</CSSTransition>
+						</TransitionGroup>
+						lbs {fish.name}
+						{formatPrice(count * fish.price)}
+						<button type="button" onClick={() => this.props.removeFromOrder(key)}>
+							&times;
+						</button>
+					</span>
+				</li>
+			</CSSTransition>
 		);
-	}
+	};
 
 	render() {
 		const orderIds = Object.keys(this.props.order);
@@ -31,7 +50,7 @@ class Order extends React.Component {
 			const count = this.props.order[key];
 			const isAvailable = fish && fish.status === 'available';
 			if (isAvailable) {
-				return tally + (count * fish.price);
+				return tally + count * fish.price;
 			}
 			return tally;
 		}, 0);
@@ -39,7 +58,9 @@ class Order extends React.Component {
 		return (
 			<div className="order-wrap">
 				<h2>Order</h2>
-				<ul className="order">{orderIds.map(this.renderOrder)}</ul>
+				<TransitionGroup component="ul" className="order">
+					{orderIds.map(this.renderOrder)}
+				</TransitionGroup>
 				<div className="total">
 					<strong>{formatPrice(total)}</strong>
 				</div>
