@@ -14,9 +14,9 @@ class App extends React.Component {
         order: {},
     };
 
-    static propTypes = ({
+    static propTypes = {
         match: PropTypes.object,
-    })
+    };
 
     componentDidMount() {
         const { params } = this.props.match;
@@ -32,7 +32,10 @@ class App extends React.Component {
     }
 
     componentDidUpdate() {
-        localStorage.setItem(this.props.match.params.storeID, JSON.stringify(this.state.order));
+        localStorage.setItem(
+            this.props.match.params.storeID,
+            JSON.stringify(this.state.order)
+        );
     }
 
     componentWillUnmount() {
@@ -53,12 +56,12 @@ class App extends React.Component {
         this.setState({ fishes }); // Set the new state
     };
 
-    deleteFish = (key) => {
+    deleteFish = key => {
         const fishesObject = this.state.fishes; // Take a copy of state
         const fishes = { ...fishesObject };
         fishes[key] = null; // Set the fish we want to delete to null so firebase deletes it.
         this.setState({ fishes }); // Update the state
-    }
+    };
 
     loadSampleFishes = () => {
         this.setState({ fishes: sampleFishes });
@@ -71,12 +74,12 @@ class App extends React.Component {
         this.setState({ order }); // Call set state to update state object
     };
 
-    removeFromOrder = (key) => {
+    removeFromOrder = key => {
         const orderObject = this.state.order; // Take a copy of state
         const order = { ...orderObject };
         delete order[key]; // Delete them item
         this.setState({ order });
-    }
+    };
 
     render() {
         return (
@@ -85,7 +88,12 @@ class App extends React.Component {
                     <Header tagline="Fresh Seafood Market" />
                     <ul className="fishes">
                         {Object.keys(this.state.fishes).map(key => (
-                            <Fish key={key} index={key} details={this.state.fishes[key]} addToOrder={this.addToOrder} />
+                            <Fish
+                                key={key}
+                                index={key}
+                                details={this.state.fishes[key]}
+                                addToOrder={this.addToOrder}
+                            />
                         ))}
                     </ul>
                 </div>
@@ -100,6 +108,7 @@ class App extends React.Component {
                     loadSampleFishes={this.loadSampleFishes}
                     fishes={this.state.fishes}
                     deleteFish={this.deleteFish}
+                    storeID={this.props.match.params.storeID}
                 />
             </div>
         );
