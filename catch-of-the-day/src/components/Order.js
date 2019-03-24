@@ -1,8 +1,17 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import PropTypes from 'prop-types';
 import { formatPrice } from '../helpers';
 
 class Order extends React.Component {
+
+    static propTypes = ({
+        fishes: PropTypes.object,
+        order: PropTypes.object,
+        removeFromOrder: PropTypes.func,
+    })
+
     renderOrder = key => {
         const fish = this.props.fishes[key];
         const count = this.props.order[key];

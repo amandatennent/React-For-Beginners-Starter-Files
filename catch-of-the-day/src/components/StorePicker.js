@@ -1,8 +1,14 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { getFunName } from '../helpers';
 
 class StorePicker extends React.Component {
     myInput = React.createRef();
+
+    static propTypes = ({
+        history: PropTypes.object,
+    })
 
     goToStore = event => {
         event.preventDefault();
